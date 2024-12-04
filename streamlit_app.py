@@ -1,16 +1,27 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 
-# Load the data
-baju_anak = pd.read_csv('data/baju_anak.csv')
+# Buat judul halaman
+st.title("Toko Baju Anak")
 
-# Create a search bar
-search_term = st.text_input('Cari Baju Anak')
+# Buat sidebar untuk memilih kategori dan kisaran harga
+st.sidebar.header("Filter")
+kategori = st.sidebar.selectbox("Kategori", ("Semua", "Laki-laki", "Perempuan"))
+harga_min = st.sidebar.number_input("Harga Minimum", min_value=0, max_value=1000000)
+harga_max = st.sidebar.number_input("Harga Maksimum", min_value=0, max_value=1000000)
 
-# Filter the data
-if search_term:
-    baju_anak = baju_anak[baju_anak['Nama'].str.contains(search_term)]
+# Muat data
+data = pd.read_csv("data_baju_anak.csv")
 
-# Display the data
-st.header('Katalog Baju Anak')
-st.write(baju_anak)
+# Filter data sesuai dengan pilihan pengguna
+if kategori != "Semua":
+    data = data[data["kategori"] == kategori]
+if harga_min > 0:
+    data = data[data["harga"] >= harga_min]
+if harga_max > 0:
+    data = data[data["harga"] <= harga_max]
+
+# Tampilkan data
+st.header("Daftar Produk")
+st.table(data)
