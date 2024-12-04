@@ -1,7 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import plotly.express as px
 
 # Buat judul halaman
 st.title("Toko Baju Anak")
@@ -27,14 +25,12 @@ if harga_max > 0:
 st.session_state.keranjang = []
 
 # Tampilkan data
-st.header("Daftar Produk")
+st.table(data)
+
+# Buat tombol "Tambahkan ke Keranjang"
 for i, row in data.iterrows():
-    # Buat tombol "Tambahkan ke Keranjang"
     if st.button(f"Tambahkan ke Keranjang ({row['nama_produk']})"):
         st.session_state.keranjang.append(row.to_dict())
-    
-    # Tampilkan informasi produk
-    st.write(f"{row['nama_produk']} - Rp{row['harga']}")
 
 # Tampilkan ikon keranjang
 st.sidebar.empty().button("Keranjang", key="keranjang")
@@ -42,12 +38,35 @@ st.sidebar.empty().button("Keranjang", key="keranjang")
 # Tampilkan formulir pemesanan
 st.form(key="form_pemesanan")
 nama = st.text_input("Nama")
-alamat = st.text_input("Alamat")
 nomor_telepon = st.number_input("Nomor Telepon")
 if st.form_submit_button("Pesan"):
-    # Kirim informasi pesanan melalui email atau simpan ke database
 
-# Tampilkan visualisasi data
-st.header("Visualisasi Data")
-fig = px.bar(data, x="kategori", y="harga")
-st.plotly_chart(fig)
+    # Kirim informasi pesanan melalui email atau simpan ke database
+import smtplib
+
+# Alamat email pengirim
+email_pengirim = "email_pengirim@domain.com"
+
+# Alamat email penerima
+email_penerima = "email_penerima@domain.com"
+
+# Subjek email
+subjek_email = "Pesanan dari Toko Baju Anak"
+
+# Isi email
+isi_email = f"""
+Nama: {nama}
+Nomor Telepon: {nomor_telepon}
+
+Produk yang Dipesan:
+"""
+
+for produk in st.session_state.keranjang:
+    isi_email += f"- {produk['nama_produk']} (Rp{produk['harga']})\n"
+
+# Kirim email
+smtplib.SMTP("smtp.domain.com", 587).sendmail(
+    email_pengirim,
+    email_penerima,
+    f"Subject: {subjek_email}\n\n{isi_email}"
+)
