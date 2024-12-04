@@ -45,4 +45,3 @@ nama = st.text_input("Nama")
 alamat = st.text_input("Alamat")
 nomor_telepon = st.number_input("Nomor Telepon")
 if st.form_submit_button("Pesan"):
-    # Kirim informasi pesanan melalui email atau simpan ke database
