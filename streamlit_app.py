@@ -38,10 +38,3 @@ if st.button(f"Tambahkan ke Keranjang ({produk['nama']})"):
 
 # Tampilkan ikon keranjang
 st.sidebar.empty().button("Keranjang", key="keranjang")
-
-# Tampilkan formulir pemesanan
-st.form(key="form_pemesanan")
-nama = st.text_input("Nama")
-alamat = st.text_input("Alamat")
-nomor_telepon = st.number_input("Nomor Telepon")
-if st.form_submit_button("Pesan"):
