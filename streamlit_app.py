@@ -1,9 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from PIL import Image
 
 # Load the data
 baju_anak = pd.read_csv('data/baju_anak.csv')
