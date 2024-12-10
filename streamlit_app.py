@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-from streamlit_login_form import st_login_form
 import os
 
 # Buat judul halaman
