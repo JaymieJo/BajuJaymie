@@ -1,62 +1,50 @@
 import streamlit as st
-import pandas as pd
-import os
 
-# Buat judul halaman
-st.title("Toko Baju Anak")
+Buat tabel pelanggan jika belum ada
+c.execute("""CREATE TABLE IF NOT EXISTS pelanggan (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nama TEXT,
+    nomor_telepon TEXT
+)""")
 
-# Buat sidebar untuk katalog produk
-st.sidebar.header("Katalog Produk")
-kategori = st.sidebar.selectbox("Kategori", ("Semua", "Laki-laki", "Perempuan"))
-ukuran = st.sidebar.selectbox("Ukuran", ("Semua", "S", "M", "L", "xl"))
-harga_min = st.sidebar.number_input("Harga Minimum", min_value=0, max_value=1000000)
-harga_max = st.sidebar.number_input("Harga Maksimum", min_value=0, max_value=1000000)
+Buat tabel produk jika belum ada
+c.execute("""CREATE TABLE IF NOT EXISTS produk (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nama TEXT,
+    harga NUMERIC
+)""")
 
-# Dapatkan jalur lengkap ke folder "baju_bayi"
-folder_path = os.path.join(os.getcwd(), "baju_bayi")
+Fungsi untuk menambahkan pelanggan baru
+def add_pelanggan(nama, nomor_telepon):
+    c.execute("INSERT INTO pelanggan (nama, nomor_telepon) VALUES (?, ?)", (nama, nomor_telepon))
+    conn.commit()
 
-# Muat daftar file gambar dalam folder
-image_files = os.listdir(folder_path)
+Fungsi untuk mendapatkan daftar produk
+def get_produk():
+    c.execute("SELECT * FROM produk")
+    return c.fetchall()
 
-# Tampilkan daftar gambar produk
-for image_file in image_files:
-    # Dapatkan jalur lengkap ke setiap file gambar
-    image_path = os.path.join(folder_path, image_file)
+Fungsi untuk menambahkan produk baru
+def add_produk(nama, harga):
+    c.execute("INSERT INTO produk (nama, harga) VALUES (?, ?)", (nama, harga))
+    conn.commit()
 
-    # Tampilkan gambar produk
-    st.image(image_path, width=200)
-    
-# Filter data sesuai dengan pilihan pengguna
-if kategori != "Semua":
-    data = data[data["kategori"] == kategori]
-if ukuran != "Semua":
-    data = data[data["ukuran"] == ukuran]
-if harga_min > 0:
-    data = data[data["harga"] >= harga_min]
-if harga_max > 0:
-    data = data[data["harga"] <= harga_max]
+Judul Aplikasi
+st.title("Kasir Toko Baju Bayi")
 
+Formulir Pembelian
+with st.form("form_pembelian"):
+    # Input Nama Pelanggan
+    nama_pelanggan = st.text_input("Nama Pelanggan")
 
-# Tampilkan produk
-for i, row in data.iterrows():
-    # Tampilkan gambar produk
-    st.image(row["gambar_produk"], width=200)
+    # Input Nomor Telepon
+    nomor_telepon = st.text_input("Nomor Telepon")
 
-# Tampilkan informasi produk
-    st.write(f"{row['nama_produk']}")
-    st.write(f"Rp{row['harga']}")
+    # Input Daftar Produk yang Dibeli
+    produk_dibeli = st.multiselect("Produk yang Dibeli", get_produk())
 
+    # Input Jumlah Produk yang Dibeli
+    jumlah_produk = st.number_input("Jumlah Produk", min_value=1)
 
-
-# Tampilkan help center
-st.header("Help Center")
-
-# Tampilkan FAQ
-st.write("FAQ")
-st.write("- Bagaimana cara memesan produk?")
-st.write("- Bagaimana cara melacak pesanan saya?")
-st.write("- Bagaimana cara mengembalikan produk?")
-
-# Tampilkan dukungan pelanggan langsung
-st.write("Dukungan Pelanggan Langsung")
-st.write("Jika Anda memiliki pertanyaan atau butuh bantuan, silakan hubungi kami melalui email di support@toko-baju-anak.com atau telepon di 0812-3456-7890.")
+    # Submit Button
+    submit = st.form_submit_button("Proses Pembelian")
