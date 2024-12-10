@@ -36,16 +36,6 @@ if harga_min > 0:
 if harga_max > 0:
     data = data[data["harga"] <= harga_max]
 
-# Buat sistem login
-username = st.session_state.get("username", None)
-if not username:
-    username, password = st_login_form(submit_button_text="Login")
-    if username and password:
-        # Validasi kredensial login
-        # ...
-
-        # Simpan username ke sesi
-        st.session_state.username = username
 
 # Tampilkan produk
 for i, row in data.iterrows():
@@ -56,48 +46,7 @@ for i, row in data.iterrows():
     st.write(f"{row['nama_produk']}")
     st.write(f"Rp{row['harga']}")
 
-    # Tambahkan tombol "Tambahkan ke Keranjang"
-    if st.button(f"Tambahkan ke Keranjang ({row['nama_produk']})"):
-        # Tambahkan produk ke keranjang
-        # ...
 
-        # Tampilkan pemberitahuan waktu nyata
-        st.success(f"{row['nama_produk']} telah ditambahkan ke keranjang.")
-
-# Tampilkan opsi keranjang belanja
-if username:
-    # Dapatkan informasi keranjang pengguna
-    # ...
-
-    # Tampilkan ikon keranjang dan jumlah item
-    st.write(f"Keranjang ({len(keranjang)} item)")
-
-    # Tampilkan daftar item keranjang
-    for item in keranjang:
-        # Tampilkan gambar produk
-        st.image(item["gambar_produk"], width=100)
-
-        # Tampilkan informasi produk
-        st.write(f"{item['nama_produk']}")
-        st.write(f"Rp{item['harga']}")
-        st.write(f"Jumlah: {item['jumlah']}")
-
-        # Tambahkan tombol "Hapus dari Keranjang"
-        if st.button(f"Hapus dari Keranjang ({item['nama_produk']})"):
-            # Hapus item dari keranjang
-            # ...
-
-            # Tampilkan pemberitahuan waktu nyata
-            st.success(f"{item['nama_produk']} telah dihapus dari keranjang.")
-
-    # Tampilkan tombol "Checkout"
-    if len(keranjang) > 0:
-        if st.button("Checkout"):
-            # Proses checkout
-            # ...
-
-            # Tampilkan konfirmasi checkout
-            st.success("Checkout berhasil.")
 
 # Tampilkan help center
 st.header("Help Center")
